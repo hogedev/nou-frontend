@@ -42,9 +42,15 @@ steps:
 
   - name: deploy
     image: docker:cli
+    environment:
+      REGISTRY_USER:
+        from_secret: gitea_username
+      REGISTRY_PASS:
+        from_secret: gitea_token
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/honya/nou-frontend:/home/honya/nou-frontend
     commands:
+      - docker login -u $REGISTRY_USER -p $REGISTRY_PASS gitea.honya.dev
       - docker compose -f /home/honya/nou-frontend/docker-compose.yml pull
-      - docker compose -f /home/honya/nou-frontend/docker-compose.yml up -d
+      - docker compose -f /home/honya/nou-frontend/docker-compose.yml up -d --force-recreate
