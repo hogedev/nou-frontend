@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: gitea.honya.dev/honya-records/minilog-admin:latest
+    image: gitea.honya.dev/honya-dev-minilog/minilog-admin:latest
     container_name: minilog-admin
     restart: unless-stopped
     networks:
