@@ -7,6 +7,7 @@ import EntryDetailPage from "./pages/EntryDetailPage";
 import EditEntryPage from "./pages/EditEntryPage";
 import CalendarPage from "./pages/CalendarPage";
 import LoginPage from "./pages/LoginPage";
+import SettingsPage from "./pages/SettingsPage";
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((s) => s.token);
@@ -18,10 +19,6 @@ function RequireAdmin({ children }: { children: React.ReactNode }) {
   const isAdmin = useAuthStore((s) => s.isAdmin);
   if (!isAdmin) return <Navigate to="/" replace />;
   return <>{children}</>;
-}
-
-function SettingsPage() {
-  return <div className="p-4 text-[var(--c-text)]">Settings coming soon</div>;
 }
 
 function App() {

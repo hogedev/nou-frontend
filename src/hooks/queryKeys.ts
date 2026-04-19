@@ -7,4 +7,8 @@ export const queryKeys = {
     dates: (year?: number, month?: number) =>
       ["entries", "dates", year, month] as const,
   },
+  admin: {
+    settings: ["admin", "settings"] as const,
+    users: ["admin", "users"] as const,
+  },
 };
