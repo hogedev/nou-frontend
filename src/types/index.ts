@@ -24,3 +24,21 @@ export interface PaginatedResponse<T> {
   offset: number;
   limit: number;
 }
+
+export interface LoginResponse {
+  access_token: string;
+  username: string;
+  is_admin: boolean;
+}
+
+export interface SiteSetting {
+  key: string;
+  value: string;
+}
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  is_admin: boolean;
+  is_public: boolean;
+}
