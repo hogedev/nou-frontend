@@ -4,6 +4,7 @@ import { AppShell } from "./components/layout/AppShell";
 import TimelinePage from "./pages/TimelinePage";
 import NewEntryPage from "./pages/NewEntryPage";
 import EntryDetailPage from "./pages/EntryDetailPage";
+import EditEntryPage from "./pages/EditEntryPage";
 import CalendarPage from "./pages/CalendarPage";
 import LoginPage from "./pages/LoginPage";
 
@@ -27,6 +28,7 @@ function App() {
         <Route index element={<TimelinePage />} />
         <Route path="/new" element={<NewEntryPage />} />
         <Route path="/entries/:id" element={<EntryDetailPage />} />
+        <Route path="/entries/:id/edit" element={<EditEntryPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
       </Route>
     </Routes>

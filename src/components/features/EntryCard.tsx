@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { photoUrl } from "../../api/client";
+import { formatJstTime } from "../../lib/date-utils";
 import type { Entry } from "../../types";
 
 interface Props {
@@ -8,10 +9,7 @@ interface Props {
 
 export function EntryCard({ entry }: Props) {
   const hasPhotos = entry.photos.length > 0;
-  const time = new Date(entry.created_at).toLocaleTimeString("ja-JP", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const time = formatJstTime(entry.created_at);
 
   return (
     <Link

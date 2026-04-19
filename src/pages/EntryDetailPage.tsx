@@ -1,7 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useEntry, useDeleteEntry } from "../hooks/useEntries";
 import { photoUrl } from "../api/client";
+import { formatJstDateTime } from "../lib/date-utils";
 
 export default function EntryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -47,12 +48,20 @@ export default function EntryDetailPage() {
         <p className="text-sm font-bold text-[var(--c-text-strong)]">
           {dateLabel}
         </p>
-        <button
-          onClick={handleDelete}
-          className="text-xs text-[var(--c-danger)] border border-[var(--c-danger)] rounded px-2 py-1 hover:bg-[var(--c-danger)] hover:text-white transition-colors"
-        >
-          削除
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/entries/${entryId}/edit`}
+            className="text-xs text-accent border border-accent rounded px-2 py-1 hover:bg-accent hover:text-white transition-colors"
+          >
+            編集
+          </Link>
+          <button
+            onClick={handleDelete}
+            className="text-xs text-[var(--c-danger)] border border-[var(--c-danger)] rounded px-2 py-1 hover:bg-[var(--c-danger)] hover:text-white transition-colors"
+          >
+            削除
+          </button>
+        </div>
       </div>
 
       {entry.photos.length > 0 && (
@@ -76,7 +85,7 @@ export default function EntryDetailPage() {
       )}
 
       <p className="text-xs text-[var(--c-text-faint)]">
-        {new Date(entry.created_at).toLocaleString("ja-JP")}
+        {formatJstDateTime(entry.created_at)}
       </p>
     </div>
   );
