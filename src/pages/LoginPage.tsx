@@ -30,7 +30,7 @@ export default function LoginPage() {
         throw new Error(data?.detail || `Error ${resp.status}`);
       }
       const data = await resp.json();
-      login(data.access_token, data.username);
+      login(data.access_token, data.username, data.is_admin);
       toast.success(isRegister ? "登録しました" : "ログインしました");
       navigate("/");
     } catch (err) {

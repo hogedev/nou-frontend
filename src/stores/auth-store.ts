@@ -3,21 +3,30 @@ import { create } from "zustand";
 interface AuthState {
   token: string | null;
   username: string | null;
-  login: (token: string, username: string) => void;
+  isAdmin: boolean | null;
+  login: (token: string, username: string, isAdmin: boolean) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   token: localStorage.getItem("diary-token"),
   username: localStorage.getItem("diary-username"),
-  login: (token, username) => {
+  isAdmin:
+    localStorage.getItem("diary-is-admin") === "true"
+      ? true
+      : localStorage.getItem("diary-is-admin") === "false"
+        ? false
+        : null,
+  login: (token, username, isAdmin) => {
     localStorage.setItem("diary-token", token);
     localStorage.setItem("diary-username", username);
-    set({ token, username });
+    localStorage.setItem("diary-is-admin", String(isAdmin));
+    set({ token, username, isAdmin });
   },
   logout: () => {
     localStorage.removeItem("diary-token");
     localStorage.removeItem("diary-username");
-    set({ token: null, username: null });
+    localStorage.removeItem("diary-is-admin");
+    set({ token: null, username: null, isAdmin: null });
   },
 }));

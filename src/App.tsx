@@ -14,6 +14,16 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function RequireAdmin({ children }: { children: React.ReactNode }) {
+  const isAdmin = useAuthStore((s) => s.isAdmin);
+  if (!isAdmin) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
+function SettingsPage() {
+  return <div className="p-4 text-[var(--c-text)]">Settings coming soon</div>;
+}
+
 function App() {
   return (
     <Routes>
@@ -30,6 +40,14 @@ function App() {
         <Route path="/entries/:id" element={<EntryDetailPage />} />
         <Route path="/entries/:id/edit" element={<EditEntryPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
+        <Route
+          path="/settings"
+          element={
+            <RequireAdmin>
+              <SettingsPage />
+            </RequireAdmin>
+          }
+        />
       </Route>
     </Routes>
   );
