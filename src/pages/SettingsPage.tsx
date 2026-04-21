@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import {
   useSettings,
@@ -13,27 +13,43 @@ function SiteSettings() {
   const { data: settings, isLoading } = useSettings();
   const updateSettings = useUpdateSettings();
 
-  const [siteName, setSiteName] = useState("");
-  const [siteDescription, setSiteDescription] = useState("");
-  const [registrationEnabled, setRegistrationEnabled] = useState(false);
-
-  useEffect(() => {
+  const defaults = useMemo(() => {
+    const result = {
+      siteName: "",
+      siteDescription: "",
+      registrationEnabled: false,
+    };
     if (settings) {
       for (const s of settings) {
-        if (s.key === "site_name") setSiteName(s.value);
-        if (s.key === "site_description") setSiteDescription(s.value);
+        if (s.key === "site_name") result.siteName = s.value;
+        if (s.key === "site_description") result.siteDescription = s.value;
         if (s.key === "registration_enabled")
-          setRegistrationEnabled(s.value === "true");
+          result.registrationEnabled = s.value === "true";
       }
     }
+    return result;
   }, [settings]);
+
+  const [siteName, setSiteName] = useState<string | null>(null);
+  const [siteDescription, setSiteDescription] = useState<string | null>(null);
+  const [registrationEnabled, setRegistrationEnabled] = useState<
+    boolean | null
+  >(null);
+
+  const displaySiteName = siteName ?? defaults.siteName;
+  const displaySiteDescription = siteDescription ?? defaults.siteDescription;
+  const displayRegistrationEnabled =
+    registrationEnabled ?? defaults.registrationEnabled;
 
   function handleSave() {
     updateSettings.mutate(
       [
-        { key: "site_name", value: siteName },
-        { key: "site_description", value: siteDescription },
-        { key: "registration_enabled", value: String(registrationEnabled) },
+        { key: "site_name", value: displaySiteName },
+        { key: "site_description", value: displaySiteDescription },
+        {
+          key: "registration_enabled",
+          value: String(displayRegistrationEnabled),
+        },
       ],
       {
         onSuccess: () => toast.success("設定を保存しました"),
@@ -58,7 +74,7 @@ function SiteSettings() {
           </label>
           <input
             type="text"
-            value={siteName}
+            value={displaySiteName}
             onChange={(e) => setSiteName(e.target.value)}
             className="w-full bg-surface-1 border border-border rounded-lg px-3 py-2 text-sm text-[var(--c-text)] focus:border-accent focus:outline-none"
           />
@@ -68,7 +84,7 @@ function SiteSettings() {
             サイト説明
           </label>
           <textarea
-            value={siteDescription}
+            value={displaySiteDescription}
             onChange={(e) => setSiteDescription(e.target.value)}
             rows={3}
             className="w-full bg-surface-1 border border-border rounded-lg px-3 py-2 text-sm text-[var(--c-text)] focus:border-accent focus:outline-none resize-none"
@@ -78,14 +94,14 @@ function SiteSettings() {
           <span className="text-sm text-[var(--c-text)]">ユーザー登録</span>
           <button
             type="button"
-            onClick={() => setRegistrationEnabled(!registrationEnabled)}
+            onClick={() => setRegistrationEnabled(!displayRegistrationEnabled)}
             className={`relative w-11 h-6 rounded-full transition-colors ${
-              registrationEnabled ? "bg-accent" : "bg-[var(--c-border)]"
+              displayRegistrationEnabled ? "bg-accent" : "bg-[var(--c-border)]"
             }`}
           >
             <span
               className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-                registrationEnabled ? "translate-x-5" : ""
+                displayRegistrationEnabled ? "translate-x-5" : ""
               }`}
             />
           </button>
