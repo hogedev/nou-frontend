@@ -67,13 +67,19 @@ export default function EntryDetailPage() {
       {entry.photos.length > 0 && (
         <div className="space-y-2">
           {entry.photos.map((photo) => (
-            <img
-              key={photo.id}
-              src={photoUrl(photo.id)}
-              alt={photo.original_filename || ""}
-              className="w-full rounded-lg"
-              loading="lazy"
-            />
+            <figure key={photo.id}>
+              <img
+                src={photoUrl(photo.id)}
+                alt={photo.caption || photo.original_filename || ""}
+                className="w-full rounded-lg"
+                loading="lazy"
+              />
+              {photo.caption && (
+                <figcaption className="text-xs text-[var(--c-text-muted)] mt-1 px-1">
+                  {photo.caption}
+                </figcaption>
+              )}
+            </figure>
           ))}
         </div>
       )}

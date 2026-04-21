@@ -12,9 +12,13 @@ export default function EditEntryPage() {
 
   const [text, setText] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
+  const [timeSlot, setTimeSlot] = useState<"morning" | "afternoon" | null>(
+    null,
+  );
 
   const displayText = text ?? entry?.text ?? "";
   const displayDate = date ?? entry?.entry_date ?? "";
+  const displayTimeSlot = timeSlot ?? entry?.time_slot ?? "morning";
 
   if (isLoading) {
     return (
@@ -40,6 +44,7 @@ export default function EditEntryPage() {
         data: {
           text: displayText.trim() || undefined,
           entry_date: displayDate,
+          time_slot: displayTimeSlot,
         },
       });
       toast.success("更新しました");
@@ -65,6 +70,31 @@ export default function EditEntryPage() {
         onChange={(e) => setDate(e.target.value)}
         className="w-full bg-surface-1 border border-border rounded-lg px-3 py-2 text-sm text-[var(--c-text)] focus:border-accent focus:outline-none"
       />
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => setTimeSlot("morning")}
+          className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-colors ${
+            displayTimeSlot === "morning"
+              ? "bg-accent text-white border-accent"
+              : "border-border text-[var(--c-text-muted)]"
+          }`}
+        >
+          午前
+        </button>
+        <button
+          type="button"
+          onClick={() => setTimeSlot("afternoon")}
+          className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-colors ${
+            displayTimeSlot === "afternoon"
+              ? "bg-accent text-white border-accent"
+              : "border-border text-[var(--c-text-muted)]"
+          }`}
+        >
+          午後
+        </button>
+      </div>
 
       <div className="flex gap-2">
         <button

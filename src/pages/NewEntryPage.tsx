@@ -2,19 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useCreateEntry } from "../hooks/useEntries";
-import { PhotoUploader } from "../components/features/PhotoUploader";
+import {
+  PhotoUploader,
+  type PhotoItem,
+} from "../components/features/PhotoUploader";
 import { toDateString } from "../lib/date-utils";
 
 export default function NewEntryPage() {
   const [text, setText] = useState("");
   const [date, setDate] = useState(toDateString(new Date()));
-  const [files, setFiles] = useState<File[]>([]);
+  const [timeSlot, setTimeSlot] = useState<"morning" | "afternoon">("morning");
+  const [items, setItems] = useState<PhotoItem[]>([]);
   const navigate = useNavigate();
   const createEntry = useCreateEntry();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!text.trim() && files.length === 0) {
+    if (!text.trim() && items.length === 0) {
       toast.error("テキストか写真を入力してください");
       return;
     }
@@ -22,8 +26,10 @@ export default function NewEntryPage() {
     const formData = new FormData();
     if (text.trim()) formData.append("text", text.trim());
     formData.append("entry_date", date);
-    for (const file of files) {
-      formData.append("photos", file);
+    formData.append("time_slot", timeSlot);
+    for (const item of items) {
+      formData.append("photos", item.file);
+      formData.append("captions", item.caption);
     }
 
     try {
@@ -37,7 +43,7 @@ export default function NewEntryPage() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <PhotoUploader files={files} onChange={setFiles} />
+      <PhotoUploader items={items} onChange={setItems} />
 
       <textarea
         value={text}
@@ -53,6 +59,31 @@ export default function NewEntryPage() {
         onChange={(e) => setDate(e.target.value)}
         className="w-full bg-surface-1 border border-border rounded-lg px-3 py-2 text-sm text-[var(--c-text)] focus:border-accent focus:outline-none"
       />
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => setTimeSlot("morning")}
+          className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-colors ${
+            timeSlot === "morning"
+              ? "bg-accent text-white border-accent"
+              : "border-border text-[var(--c-text-muted)]"
+          }`}
+        >
+          午前
+        </button>
+        <button
+          type="button"
+          onClick={() => setTimeSlot("afternoon")}
+          className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-colors ${
+            timeSlot === "afternoon"
+              ? "bg-accent text-white border-accent"
+              : "border-border text-[var(--c-text-muted)]"
+          }`}
+        >
+          午後
+        </button>
+      </div>
 
       <button
         type="submit"
